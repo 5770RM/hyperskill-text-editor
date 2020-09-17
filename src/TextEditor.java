@@ -14,18 +14,18 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class TextEditor extends JFrame {
-    private JPanel pane;
-    private JTextField filenameField;
-    private JButton saveButton;
-    private JButton loadButton;
-    private JButton searchButton, previousButton, nextButton;
-    private JCheckBox checkBox;
-    private JTextArea textArea;
-    private JScrollPane scrollPane;
-    private JFileChooser fileChooser;
-    private ArrayList<ArrayList<Integer>> listOfIndices;
-    private int currentCursor;
-    private MatchResult matchResult;
+    private JPanel pane; // Main panel
+    private JTextField filenameField; // Filename field as well as search by word field
+    private JButton saveButton; // SAVE button
+    private JButton loadButton; // LOAD button
+    private JButton searchButton, previousButton, nextButton; // SEARCH, PREVIOUS, NEXT buttons
+    private JCheckBox checkBox; // Use RegExp checkbox
+    private JTextArea textArea; // Main text area
+    private JScrollPane scrollPane; // Scrolling function to text area
+    private JFileChooser fileChooser; // file manager
+    private ArrayList<ArrayList<Integer>> listOfIndices; // indices of all word occurrences from start to end index
+    private int currentCursor; // current word in list, i.e. first, second etc.
+    private MatchResult matchResult; // keeps information of found word
 
 
     public TextEditor() {
@@ -54,7 +54,7 @@ public class TextEditor extends JFrame {
         setVisible(true);
     }
 
-
+    // adding main panel
     private void addPane() {
         pane = new JPanel(new FlowLayout());
         add(pane, BorderLayout.PAGE_START);
@@ -64,11 +64,13 @@ public class TextEditor extends JFrame {
         add(new JPanel(), BorderLayout.LINE_END);
     }
 
+    // adding Filename field
     private void addTextField() {
         pane.add(filenameField = new JTextField(15));
         filenameField.setName("SearchField");
     }
 
+    // adding menu
     private void addMenu() {
         JMenuItem menuSave = new JMenuItem("Save");
         menuSave.setName("MenuSave");
@@ -123,6 +125,7 @@ public class TextEditor extends JFrame {
 
     }
 
+    // adding SAVE button
     private void addSaveButton() {
         saveButton = new JButton();
         saveButton.setName("SaveButton");
@@ -131,12 +134,15 @@ public class TextEditor extends JFrame {
 
     }
 
+    // adding LOAD button
     private void addLoadButton() {
         loadButton = new JButton();
         loadButton.setName("OpenButton");
         loadButton.addActionListener(e -> loadFile());
         pane.add(loadButton);
     }
+
+    // adding SEARCH button
     private void addSearchButton() {
         searchButton = new JButton();
         searchButton.setName("StartSearchButton");
@@ -144,6 +150,7 @@ public class TextEditor extends JFrame {
         pane.add(searchButton);
     }
 
+    // adding PREVIOUS button
     private void addPreviousButton() {
         previousButton = new JButton();
         previousButton.setName("PreviousMatchButton");
@@ -151,6 +158,7 @@ public class TextEditor extends JFrame {
         pane.add(previousButton);
     }
 
+    // adding NEXT button
     private void addNextButton() {
         nextButton = new JButton();
         nextButton.setName("NextMatchButton");
@@ -158,18 +166,21 @@ public class TextEditor extends JFrame {
         pane.add(nextButton);
     }
 
+    // adding RegExp checkbox
     private void addCheckbox() {
         checkBox = new JCheckBox("Use regex");
         checkBox.setName("UseRegExCheckbox");
         pane.add(checkBox);
     }
 
+    // adding File manager
     private void addFileChooser() {
         fileChooser = new JFileChooser(FileSystemView.getFileSystemView().getDefaultDirectory());
         fileChooser.setName("FileChooser");
         add(fileChooser);
     }
 
+    // changes the size of image and adds it to specific button
     private void addIcon(ImageIcon icon, JButton button) {
         Image image = icon.getImage();
         Image newImage = image.getScaledInstance(20,20, Image.SCALE_SMOOTH);
@@ -177,6 +188,7 @@ public class TextEditor extends JFrame {
         button.setIcon(icon);
     }
 
+    //adding Text Area
     private void addTextArea() {
         textArea = new JTextArea();
         textArea.setName("TextArea");
@@ -190,6 +202,7 @@ public class TextEditor extends JFrame {
 
     }
 
+    // loads text from file
     private void loadFile() {
         int returnValue = fileChooser.showOpenDialog(null);
 
@@ -213,6 +226,7 @@ public class TextEditor extends JFrame {
 
     }
 
+    // saves text from TextArea to file
     private void saveFile() {
         fileChooser.showSaveDialog(null);
         String fileName = filenameField.getText();
@@ -225,6 +239,7 @@ public class TextEditor extends JFrame {
         }
     }
 
+    // searches word taken from Filename field
     private void searchWord() {
         listOfIndices = new ArrayList<>();
         String word = filenameField.getText();
@@ -268,7 +283,7 @@ public class TextEditor extends JFrame {
         currentCursor = 0;
     }
 
-
+    // selects next word occurrence
     private void nextWord() {
         if (currentCursor == listOfIndices.size() - 1) {
             currentCursor = 0;
@@ -286,6 +301,7 @@ public class TextEditor extends JFrame {
         textArea.grabFocus();
     }
 
+    // selects previous word occurrence
     private void previousWord() {
         if (currentCursor == 0) {
             currentCursor = listOfIndices.size() - 1;
